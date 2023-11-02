@@ -149,6 +149,9 @@ void setup()
                 curr_ms = millis();
                 next_frame_ms = start_ms + (++next_frame * 1000 / FPS);
                 //Serial.println(next_frame);
+                /*gfx->setCursor(0, 0);
+                gfx->setTextColor(WHITE);
+                gfx->printf("Played frames: %d\n", next_frame);*/
             }
             int time_used = millis() - start_ms;
             int total_frames = next_frame - 1;
@@ -232,8 +235,8 @@ void setup()
     delay(60000);
     ledcDetachPin(TFT_BL);
 #endif
-    gfx->displayOff();
-    esp_deep_sleep_start();
+    //gfx->displayOff();
+    //esp_deep_sleep_start();
 }
 
 void loop()

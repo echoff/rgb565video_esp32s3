@@ -1,7 +1,7 @@
 #ifndef _MJPEGCLASS_H_
 #define _MJPEGCLASS_H_
 
-#define READ_BUFFER_SIZE 1024
+#define READ_BUFFER_SIZE 2048
 #define MAXOUTPUTSIZE (MAX_BUFFERED_PIXELS / 16 / 16)
 #define NUMBER_OF_DECODE_BUFFER 7
 #define NUMBER_OF_DRAW_BUFFER 4
@@ -137,14 +137,14 @@ public:
       _mjpegBufs[i].buf = (uint8_t*)ps_malloc(mjpegBufufSize);
       if (_mjpegBufs[i].buf)
       {
-        printf("#%d decode buffer allocated.\n", i);
+        Serial.printf("#%d decode buffer allocated.\n", i);
       }
     }
     _mjpeg_buf = _mjpegBufs[_mBufIdx].buf;
 
     if (!_read_buf)
     {
-      _read_buf = (uint8_t *)malloc(READ_BUFFER_SIZE);
+      _read_buf = (uint8_t *)ps_malloc(READ_BUFFER_SIZE);
     }
     if (_read_buf)
     {
@@ -160,7 +160,7 @@ public:
         _pDrawTask.drawFunc = pfnDraw;
         _pDecodeTask.xqh = xQueueCreate(NUMBER_OF_DECODE_BUFFER, sizeof(mjpegBuf));
         _pDecodeTask.drawFunc = queueDrawMCU;
-        xTaskCreatePinnedToCore(decodeTask, "decodeTask", 1600, &_pDecodeTask, 2, &_decodeTask, 0);
+        xTaskCreatePinnedToCore(decodeTask, "decodeTask", 10000, &_pDecodeTask, 2, &_decodeTask, 0);
         xTaskCreatePinnedToCore(drawTask, "drawTask", 10000, &_pDrawTask, 2, &_drawTask, 1);
       }
       else
@@ -168,7 +168,7 @@ public:
         _xqh = xQueueCreate(NUMBER_OF_DRAW_BUFFER, sizeof(JPEGDRAW));
         _pDrawTask.xqh = _xqh;
         _pDrawTask.drawFunc = pfnDraw;
-        xTaskCreatePinnedToCore(drawTask, "drawTask", 1600, &_pDrawTask, 2, &_drawTask, 0);
+        xTaskCreatePinnedToCore(drawTask, "drawTask", 10000, &_pDrawTask, 2, &_drawTask, 0);
       }
     }
     else
